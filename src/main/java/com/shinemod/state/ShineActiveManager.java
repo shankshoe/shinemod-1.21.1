@@ -128,7 +128,7 @@ public class ShineActiveManager {
     }
     private static void CancelShine(ServerPlayerEntity player){
         
-        Shinemod.LOGGER.info("ending shine");
+        //Shinemod.LOGGER.info("ending shine");
         player.setInvulnerable(false);
         ACTIVE.remove(player.getUuid());
         ShineStateManager.setState(player, ShineStateEnum.SHINE_CAPABLE);

@@ -12,6 +12,7 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 
 public class ShineRenderer extends
         FeatureRenderer<AbstractClientPlayerEntity,
@@ -47,48 +48,65 @@ public class ShineRenderer extends
                 
                 matrices.push();
 
-                // position slightly above feet
-                matrices.translate(0, -0.1, 0);
+matrices.translate(0, -0.1, 0);
 
-                // billboard toward camera
-                var camera = MinecraftClient.getInstance().gameRenderer.getCamera();
-                matrices.multiply(camera.getRotation());        
-                
-                float size = 1.5f;
+var camera = MinecraftClient.getInstance()
+        .gameRenderer
+        .getCamera();
 
-                MatrixStack.Entry entry = matrices.peek();
+float bodyYaw = player.prevBodyYaw +
+        (player.bodyYaw - player.prevBodyYaw) * tickDelta;
 
-                VertexConsumer consumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(TEXTURE));
+// cancel player body rotation
+matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-bodyYaw));
 
-                consumer.vertex(entry, -size, -size, 0)
-                        .color(255,255,255,225)
-                        .texture(0,1)
-                        .overlay(OverlayTexture.DEFAULT_UV)
-                        .light(light)
-                        .normal(entry,0,1,0);
+// now match camera exactly
+matrices.multiply(camera.getRotation());
 
-                consumer.vertex(entry, size, -size, 0)
-                        .color(255,255,255,225)
-                        .texture(1,1)
-                        .overlay(OverlayTexture.DEFAULT_UV)
-                        .light(light)
-                        .normal(entry,0,1,0);
+matrices.scale(-1.0F, -1.0F, 1.0F);
 
-                consumer.vertex(entry, size, size, 0)
-                        .color(255,255,255,225)
-                        .texture(1,0)
-                        .overlay(OverlayTexture.DEFAULT_UV)
-                        .light(light)
-                        .normal(entry,0,1,0);
+float size = 1.5f;
+MatrixStack.Entry entry = matrices.peek();
 
-                consumer.vertex(entry, -size, size, 0)
-                        .color(255,255,255,225)
-                        .texture(0,0)
-                        .overlay(OverlayTexture.DEFAULT_UV)
-                        .light(light)
-                        .normal(entry,0,1,0);
+VertexConsumer consumer =
+        vertexConsumers.getBuffer(
+                RenderLayer.getEntityTranslucent(TEXTURE)
+        );
 
-                matrices.pop();
+int fullBright =
+        LightmapTextureManager.MAX_LIGHT_COORDINATE;
+
+// vertices...
+
+consumer.vertex(entry, -size, -size, 0)
+        .color(255,255,255,255)
+        .texture(0,1)
+        .overlay(OverlayTexture.DEFAULT_UV)
+        .light(fullBright)
+        .normal(entry,0,1,0);
+
+consumer.vertex(entry, size, -size, 0)
+        .color(255,255,255,255)
+        .texture(1,1)
+        .overlay(OverlayTexture.DEFAULT_UV)
+        .light(fullBright)
+        .normal(entry,0,1,0);
+
+consumer.vertex(entry, size, size, 0)
+        .color(255,255,255,255)
+        .texture(1,0)
+        .overlay(OverlayTexture.DEFAULT_UV)
+        .light(fullBright)
+        .normal(entry,0,1,0);
+
+consumer.vertex(entry, -size, size, 0)
+        .color(255,255,255,255)
+        .texture(0,0)
+        .overlay(OverlayTexture.DEFAULT_UV)
+        .light(fullBright)
+        .normal(entry,0,1,0);
+
+matrices.pop();
         }
         return;
         }
