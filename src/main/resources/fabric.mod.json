@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "shinemod",
+	"version": "${version}",
+	"name": "shinemod",
+	"description": "This adds that *fox noises* shine",
+	"authors": [
+		"Chefmakes"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/shinemod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.shinemod.Shinemod"
+		],
+		"client": [
+			"com.shinemod.client.ShinemodClient"
+		],
+		"server": [
+			"com.shinemod.server.ShinemodServer"
+		]
+	},
+	"mixins": [
+		"shinemod.mixins.json",
+		{
+			"config": "shinemod.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}

@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "com.shinemod.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"ShineDataNBTMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
