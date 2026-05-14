@@ -46,7 +46,7 @@ public class ShineRenderer extends
         //Shinemod.LOGGER.info("(CLIENT) current state: " + current + ", previous state : " + previous);
         if (current == ShineStateEnum.SHINE_ATTACK_REFLECT || current == ShineStateEnum.SHINE_REFLECT_ONLY) {
                 
-                matrices.push();
+matrices.push();
 
 matrices.translate(0, -0.1, 0);
 
@@ -63,6 +63,8 @@ matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-bodyYaw));
 // now match camera exactly
 matrices.multiply(camera.getRotation());
 
+// rotate relative to camera
+matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(0.0F));
 matrices.scale(-1.0F, -1.0F, 1.0F);
 
 float size = 1.5f;
@@ -108,6 +110,5 @@ consumer.vertex(entry, -size, size, 0)
 
 matrices.pop();
         }
-        return;
         }
 }
